@@ -38,7 +38,7 @@ class TermoraFrame : JFrame(), DataProvider {
     private val id = UUID.randomUUID().toString()
     private val windowScope = ApplicationScope.forWindowScope(this)
     private val tabbedPane = MyTabbedPane()
-    private val toolbar = TermoraToolBar(windowScope, this, tabbedPane)
+    private val toolbar = TermoraToolBar(windowScope, this)
     private val terminalTabbed = TerminalTabbed(windowScope, toolbar, tabbedPane)
     private val dataProviderSupport = DataProviderSupport()
     private val welcomePanel = WelcomePanel(windowScope)
@@ -260,6 +260,10 @@ class TermoraFrame : JFrame(), DataProvider {
 
 
     private class GlassPane : JComponent() {
+        init {
+            isFocusable = false
+        }
+
         override fun paintComponent(g: Graphics) {
             val img = BackgroundManager.getInstance().getBackgroundImage() ?: return
             val g2d = g as Graphics2D
@@ -269,6 +273,10 @@ class TermoraFrame : JFrame(), DataProvider {
             )
             g2d.drawImage(img, 0, 0, width, height, null)
             g2d.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER)
+        }
+
+        override fun contains(x: Int, y: Int): Boolean {
+            return false
         }
 
     }
