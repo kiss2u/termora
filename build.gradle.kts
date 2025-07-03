@@ -21,7 +21,7 @@ plugins {
 
 
 group = "app.termora"
-version = "1.0.15"
+version = "1.0.17"
 
 val os: OperatingSystem = DefaultNativePlatform.getCurrentOperatingSystem()
 val arch: ArchitectureInternal = DefaultNativePlatform.getCurrentArchitecture()
@@ -134,15 +134,12 @@ application {
         args.add("--add-opens java.desktop/java.awt=ALL-UNNAMED")
         args.add("--add-opens java.desktop/sun.lwawt=ALL-UNNAMED")
         args.add("--add-opens java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
+        args.add("--add-exports java.desktop/com.apple.eawt=ALL-UNNAMED")
         args.add("-Dsun.java2d.metal=true")
         args.add("-Dapple.awt.application.appearance=system")
     }
 
     args.add("-Dapp-version=${project.version}")
-
-    if (os.isLinux) {
-        args.add("-Dsun.java2d.opengl=true")
-    }
 
     applicationDefaultJvmArgs = args
     mainClass = "app.termora.MainKt"
@@ -388,10 +385,7 @@ tasks.register<Exec>("jpackage") {
         options.add("--add-opens java.desktop/sun.lwawt.macosx=ALL-UNNAMED")
         options.add("-Dapple.awt.application.appearance=system")
         options.add("--add-opens java.desktop/sun.lwawt.macosx.concurrent=ALL-UNNAMED")
-    }
-
-    if (os.isLinux) {
-        options.add("-Dsun.java2d.opengl=true")
+        options.add("--add-exports java.desktop/com.apple.eawt=ALL-UNNAMED")
     }
 
     val arguments = mutableListOf("${Jvm.current().javaHome}/bin/jpackage")
